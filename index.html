@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RETRO ACCESS TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: black;
+            color: #00ff66;
+            font-family: 'Press Start 2P', monospace;
+            text-align: center;
+            padding: 30px;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+
+        h1 {
+            margin-bottom: 40px;
+            animation: flicker 1.5s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 420px;
+            margin: auto;
+        }
+
+        button {
+            background: black;
+            color: #00ff66;
+            border: 2px solid #00ff66;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        button:hover {
+            background: #00ff66;
+            color: black;
+        }
+
+        /* TARJETAS */
+        .card {
+            display: none;
+            border: 2px solid #00ff66;
+            margin: 40px auto;
+            max-width: 320px;
+            padding: 15px;
+        }
+
+        .card img {
+            width: 100%;
+            border: 2px solid #00ff66;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            border: 2px solid #00ff66;
+            padding: 25px;
+            width: 320px;
+            background: black;
+        }
+
+        input {
+            background: black;
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            padding: 10px;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        #codeInput {
+            width: 220px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .pin-box {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .pin {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .status {
+            margin-top: 15px;
+            height: 18px;
+        }
+
+        .close {
+            margin-top: 15px;
+        }
+
+        .unlocked {
+            background: #00ff66;
+            color: black;
+            border-color: #00ff66;
+            cursor: default;
+        }
+
+        .unlocked {
+            animation: flash 0.5s ease-in-out;
+        }
+
+        @keyframes flash {
+            0% {
+                background: black;
+                color: #00ff66;
+            }
+
+            100% {
+                background: #00ff66;
+                color: black;
+            }
+        }
+
+        /* ===== MOBILE FRIENDLY ===== */
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+
+            .buttons {
+                gap: 15px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 18px;
+            }
+
+            .modal-box {
+                width: 90%;
+                max-width: 340px;
+            }
+
+            .pin {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+
+            #codeInput {
+                width: 100%;
+                max-width: 240px;
+                height: 44px;
+                font-size: 14px;
+            }
+
+            .card {
+                width: 95%;
+            }
+
+            .card img {
+                border-width: 1px;
+            }
+        }
+
+        .final-input {
+            width: 60px;
+            /* tamaño pequeño */
+            height: 60px;
+            margin: 15px auto;
+            /* centrado */
+            padding: 0;
+            background: black;
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            text-align: center;
+            font-family: inherit;
+            font-size: 24px;
+            /* letra grande */
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <h1>RETRO ACCESS TERMINAL</h1>
+
+        <button id="btn1" onclick="openModal(1)">ARCHIVO_01 ▓ LOCKED</button>
+        <button id="btn2" onclick="openModal(2)">ARCHIVO_02 ▓ LOCKED</button>
+        <button id="btn3" onclick="openFinal()">ARCHIVO_03 ▓ LOCKED</button>
+
+        <div id="finalQuestion" class="card">
+            <img src="img/pregunta.png">
+
+            <p>INGRESA LA RESPUESTA</p>
+
+            <div class="input-wrapper">
+                <input id="finalInput" class="final-input" maxlength="1" autocomplete="off">
+            </div>
+
+            <button onclick="checkFinal()">CONFIRM</button>
+
+            <div id="finalStatus" class="status"></div>
+        </div>
+
+
+
+        <!-- TARJETAS -->
+        <div id="gift1" class="card">
+            <img src="img/img1.png">
+            <p>REGALO 1 DESBLOQUEADO</p>
+        </div>
+
+        <div id="gift2" class="card">
+            <img src="img/img2.png">
+            <p>REGALO 2 DESBLOQUEADO</p>
+        </div>
+
+        <div id="gift3" class="card">
+            <img src="img/img3.png">
+            <p>REGALO 3 ACCEDIDO</p>
+        </div>
+
+    </div>
+
+
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+        <div class="modal-box">
+            <p id="modalTitle">ENTER ACCESS CODE</p>
+
+            <!-- PIN 4 DIGITOS -->
+            <div id="pinBox" class="pin-box">
+                <input class="pin" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="moveNext(this)">
+                <input class="pin" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="moveNext(this)">
+                <input class="pin" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="moveNext(this)">
+                <input class="pin" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            </div>
+
+
+            <!-- INPUT NORMAL -->
+            <input id="codeInput" autocomplete="off" inputmode="text">
+
+            <div class="status" id="status"></div>
+
+            <button onclick="checkCode()">ENTER</button>
+            <button class="close" onclick="closeModal()">CANCEL</button>
+        </div>
+    </div>
+
+    <script>
+        let current = 0;
+
+        function openModal(n) {
+            current = n;
+            document.getElementById("modal").style.display = "flex";
+            document.getElementById("status").textContent = "";
+
+            document.getElementById("codeInput").value = "";
+            document.querySelectorAll(".pin").forEach(p => p.value = "");
+
+            if (n === 1) {
+                document.getElementById("modalTitle").textContent = "ENTER 4 DIGIT CODE";
+                document.getElementById("pinBox").style.display = "flex";
+                document.getElementById("codeInput").style.display = "none";
+                document.querySelector(".pin").focus();
+            } else {
+                document.getElementById("modalTitle").textContent = "ENTER ACCESS CODE";
+                document.getElementById("pinBox").style.display = "none";
+                document.getElementById("codeInput").style.display = "block";
+                document.getElementById("codeInput").focus();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function moveNext(el) {
+            if (el.value.length === 1 && el.nextElementSibling) {
+                el.nextElementSibling.focus();
+            }
+        }
+
+        function checkCode() {
+            const status = document.getElementById("status");
+            let ok = false;
+
+            if (current === 1) {
+                const pin = [...document.querySelectorAll(".pin")]
+                    .map(p => p.value)
+                    .join("");
+                if (pin === "5318") ok = true;
+            }
+
+            const text = document.getElementById("codeInput").value
+                .toLowerCase()
+                .replace(/\s+/g, ""); // elimina espacios
+
+            if (text === "babyyoda") ok = true;
+
+
+            if (current === 3) {
+                if (document.getElementById("codeInput").value === "5318BABYYODA") ok = true;
+            }
+
+            if (ok) {
+                status.textContent = "ACCESS GRANTED";
+                setTimeout(() => {
+                    document.getElementById("gift" + current).style.display = "block";
+
+                    const btn = document.getElementById("btn" + current);
+                    btn.textContent = "ACCESS GRANTED";
+                    btn.classList.add("unlocked");
+                    btn.onclick = null; // opcional: bloquea el botón
+
+                    closeModal();
+
+                }, 700);
+            } else {
+                status.textContent = "ACCESS DENIED";
+            }
+        }
+
+        function openFinal() {
+            document.getElementById("finalQuestion").style.display = "block";
+        }
+
+        function checkFinal() {
+            const input = document.getElementById("finalInput").value
+                .toLowerCase()
+                .replace(/\s+/g, "");
+
+            const status = document.getElementById("finalStatus");
+            const btn = document.getElementById("btn3");
+
+            // 🔑 RESPUESTA CORRECTA
+            if (input === "c") {
+                status.textContent = "ACCESS GRANTED";
+
+                setTimeout(() => {
+                    document.getElementById("finalQuestion").style.display = "none";
+                    document.getElementById("gift3").style.display = "block";
+
+                    btn.textContent = "ACCESS GRANTED";
+                    btn.classList.add("unlocked");
+                    btn.onclick = null;
+                }, 700);
+            } else {
+                status.textContent = "ACCESS DENIED";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
